@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  EmojiMemoryGameView.swift
 //  Memorize
 //
 //  Created by Michael Kim on 8/2/24.
@@ -7,28 +7,28 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var viewModel: EmojiMemoryGame
-    
-    let emojis: Array<String> = ["🐶", "🐱", "🐼", "🐯", "🦁", "🐧", "🐮", "🐸", "🐵", "🐔", "🐝", "🦄"]
-    
-//    @State var cardCount: Int = 4
+struct EmojiMemoryGameView: View {
+    @ObservedObject var viewModel: EmojiMemoryGame
+        
     
     var body: some View {
-     
-        ScrollView {
-            cards
-        }.padding()
-            
-            
-  
+        VStack {
+            ScrollView {
+                cards
+            }
+            Button("Shuffle") {
+                viewModel.shuffle()
+            }
+        }
+        .padding()
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 90))]) {
-            ForEach(emojis.indices, id: \.self){ index in
-                CardView(content: emojis[index])
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0) {
+            ForEach(viewModel.cards.indices, id: \.self){ index in
+                CardView(viewModel.cards[index])
                     .aspectRatio(2/3, contentMode : .fit)
+                    .padding(4)
             }
         }
         .foregroundColor(.green)
@@ -65,8 +65,11 @@ struct ContentView: View {
 }
 
 struct CardView: View {
-    let content: String
-    @State var isFaceUp: Bool = true
+    let card: MemoryGame<String>.Card
+    
+    init(_ card: MemoryGame<String>.Card) {
+        self.card = card
+    }
     
     var body: some View {
         ZStack() {
@@ -74,16 +77,21 @@ struct CardView: View {
             Group{
                 base.fill(.white)
                 base.strokeBorder(lineWidth: 5)
-                Text(content).font(.largeTitle)
+                Text(card.content)
+                    .font(.system(size:200))
+                    .minimumScaleFactor(0.01)
+                    .aspectRatio(1, contentMode: .fit)
             }
-            .opacity(isFaceUp ? 1 : 0)
-            base.fill().opacity(isFaceUp ? 0:1)
-        }.onTapGesture {
-            isFaceUp.toggle()
+                .opacity(card.isFaceUp ? 1 : 0)
+            base.fill()
+                .opacity(card.isFaceUp ? 0:1)
         }
     }
 }
 
-#Preview {
-    ContentView()
+
+struct EmojiMemryGameView_Previews: PreviewProvider {
+    static var previews: some View{
+        EmojiMemoryGameView(viewModel: EmojiMemoryGame())
+    }
 }
