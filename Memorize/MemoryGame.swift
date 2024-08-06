@@ -53,31 +53,15 @@ struct MemoryGame<CardContent> where CardContent: Equatable{
         
     }
     
-//    private func index(of card: Card) -> Int? {
-//        for index in cards.indices {
-//            if cards[index].id == card.id {
-//                return index
-//            }
-//        }
-//        return nil
-//    }
     
     mutating func shuffle() {
         cards.shuffle()
-        print(cards)
+//        print(cards)
     }
     
     struct Card: Equatable, Identifiable, CustomDebugStringConvertible {
         
-        
-        
-        
-//        static func == (lhs: Card, rhs: Card) -> Bool {
-//            return lhs.isFaceUp == rhs.isFaceUp &&
-//            lhs.IsMatched == rhs.IsMatched &&
-//            lhs.content == rhs.content
-//        }
-        
+    
         var isFaceUp = false
         var IsMatched = false
         let content: CardContent
@@ -85,7 +69,8 @@ struct MemoryGame<CardContent> where CardContent: Equatable{
         var id: String
         
         var debugDescription: String {
-            return "\(id): \(content) \(isFaceUp ? "up" : "down")\(IsMatched ? "matched" : "")"
+//            return "\(id): \(content) \(isFaceUp ? "up" : "down")\(IsMatched ? "matched" : "")"
+            return "debugDescription!"
         }
     }
 }
