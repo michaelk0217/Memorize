@@ -26,81 +26,23 @@ struct EmojiMemoryGameView: View {
         
     }
     
-    @ViewBuilder
     private var cards: some View {
         
-        GeometryReader { geometry in
-            let gridItemSize = gridItemWidthThatFits(
-                count: viewModel.cards.count,
-                size: geometry.size,
-                atAspectRatio: 2/3
-            )
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: gridItemSize), spacing: 0)], spacing: 0) {
-                ForEach(viewModel.cards){ card in
-                    
-                    CardView(card)
-                        .aspectRatio(aspectRatio, contentMode : .fit)
-                        .padding(4)
-                        .onTapGesture{
-                            viewModel.choose(card)
-                        }
+        AspectVGrid(viewModel.cards, aspectRatio: aspectRatio){ card in
+           
+            CardView(card)
+                .aspectRatio(aspectRatio, contentMode : .fit)
+                .padding(4)
+                .onTapGesture{
+                    viewModel.choose(card)
                 }
-            }
+                   
+            
         }
         .foregroundColor(.green)
         
     }
     
-    func gridItemWidthThatFits(
-        count:Int,
-        size: CGSize,
-        atAspectRatio aspectRatio: CGFloat
-    ) -> CGFloat {
-        let count = CGFloat(count)
-        var columnCount = 1.0
-        repeat {
-            let width = size.width / columnCount
-            let height = width / aspectRatio
-            let rowCount = (count / columnCount).rounded(.up)
-            if rowCount * height < size.height {
-                return (size.width / columnCount).rounded(.down)
-            }
-            columnCount += 1
-        } while columnCount < count
-        return min(size.width / count, size.height * aspectRatio).rounded(.down)
-        
-//        return 65
-        
-    }
-    
-//    var cardCountAdjusters: some View {
-//        HStack() {
-//            cardRemover
-//            Spacer()
-//            cardAdder
-//        }
-//        .imageScale(.large)
-//        .font(.largeTitle)
-//    }
-//    
-//    func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
-//        Button(action: {
-//            
-//            cardCount += offset
-//            
-//        }, label: {
-//            Image(systemName: symbol)
-//        })
-//        .disabled(cardCount + offset < 1 || cardCount + offset > emojis.count)
-//    }
-//    
-//    var cardRemover: some View {
-//        cardCountAdjuster(by: -1, symbol: "minus.square.fill")
-//    }
-//    
-//    var cardAdder: some View {
-//        cardCountAdjuster(by: 1, symbol: "plus.square.fill")
-//    }
 }
 
 struct CardView: View {
